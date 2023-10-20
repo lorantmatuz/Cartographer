@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="theme.png">
+  <link rel="stylesheet" href="cartographer.css">
+  <script src="scripts/elements.js"></script>
+  <script src="scripts/missions.js"></script>
+  <title>The cartographer game</title>
+</head>
+<body>
+  <div class="left-side">
+  <h1>Map</h1>
+  <div id="mainTable"></div>
+  </div>
+  <div class="right-side">
+  <div id="seasons">
+    <div id="spring" class="season">
+      <div>Spring:</div>
+      <div><span>0</span> point</div>
+    </div>
+    <div id="summer" class="season">
+      <div>Summer:</div>
+      <div><span>0</span> point</div>
+    </div>
+    <div id="fall"   class="season">
+      <div>Fall:</div>
+      <div><span>0</span> point</div>
+    </div>
+    <div id="winter" class="season">
+      <div>Winter:</div>
+      <div><span>0</span> point</div>
+    </div>
+  </div>
+    <div id="totalPoint">Total: <span>0</span> point </div>
+  <h2 id="currentSeason">Current season: <span></span></h2>
+  <hr>
+  <div class="mission">
+    <!-- 
+      img
+      name
+      description
+    -->
+  </div>
+  <h2 id="timeInSeason">Time left in season: <span></span></h2>
+  <hr>
+  <h2>Next item:</h2>
+  <div class="flex">
+    <div id="nextItem">
+      <table id="nextItemTable">
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="buttons">
+      <button type="button" id="rotateButton">Rotate</button>
+      <button type="button" id="mirrorButton">Mirror</button>
+    </div>
+  </div>
+  </div>
+</body>
+<script src="scripts/table.js"></script>
+<script src="scripts/elementHandler.js"></script>
+<script src="scripts/main.js"></script>
+</html>
