@@ -1,82 +1,71 @@
-const parent = document.querySelector('#mainTable');
-const size = 11;
-let table;
-let tds = []
-
-
-/* Basic table creation and init */
-
-function createTable() {
-  table = document.createElement('table');
-  for (let i = 0; i < size; ++i) {
-    let tr = document.createElement('tr');
-    for (let j = 0; j < size; ++j) {
-      let td = document.createElement('td');
-      tds.push(td);
-      tr.appendChild(td);
-    }
-    table.appendChild(tr);
+class Table {
+  constructor() {
+    this.size = 11;
+    this.tds = [];
+    this.table = null;
+    this.parent = document.querySelector('#mainTable'); 
   }
-  parent.appendChild(table);
-}
 
-function initTable(arr, src) {
-  arr.forEach(coord => {
-    let index = coordinateToIndex(coord[0] - 1,coord[1] - 1);
-    let img = document.createElement('img');
-    img.src = src;
-    tds[index].appendChild(img);
-  });
-}
-
-/* Helper functions */
-
-function coordinateToIndex(i,j) {
-  return i * size + j;
-}
-
-function isFreeCell(i,j) {
-  const index = coordinateToIndex(i,j);
-  return tds[index].firstChild == null;
-}
-
-function isAcceptableElement(element, row, col) {
-  let retVal = true;
-  shapeToIndices(element).forEach(coord => {
-    const rowInTable = coord[0] + row;
-    const colInTable = coord[1] + col;
-    if(rowInTable >= size || colInTable >= size ||
-        !isFreeCell(rowInTable, colInTable)) {
-      retVal = false;
-      return ;
+  createTable() {
+    this.table = document.createElement('table');
+    for (let i = 0; i < this.size; ++i) {
+      let tr = document.createElement('tr');
+      for (let j = 0; j < this.size; ++j) {
+        let td = document.createElement('td');
+        this.tds.push(td);
+        tr.appendChild(td);
+      }
+      this.table.appendChild(tr);
     }
-  });
-  return retVal;
-}
+    this.parent.appendChild(this.table);
+    this.initTable();
+  }
 
-function funcForTable(element, row, col, func) {
-  shapeToIndices(element).forEach(coord => {
-    const index = coordinateToIndex(coord[0] + row, coord[1] + col);
-    func(index);
-  });
-}
+  initTable() {
+    [[2,2], [4,9], [6,4], [9,10], [10,6]]
+    .forEach(coord => {
+      let index = this.coordinateToIndex(coord[0] - 1,coord[1] - 1);
+      let img = document.createElement('img');
+      img.src = 'resources/fields/mountain.png';
+      this.tds[index].appendChild(img);
+    });
+  }
 
-function insertElement(element, row, col) {
-  funcForTable(element,row,col, (index) => {
-    const img = document.createElement('img');
-    img.src = typeToSrc(element);
-    tds[index].appendChild(img);
-  });
-}
+  isFreeCell(i,j) {
+    const index = this.coordinateToIndex(i,j);
+    return !this.tds[index].firstChild;
+  }
 
+  isAcceptableElement(element, row, col) {
+    let retVal = true;
+    element.shapeToIndices().forEach(coord => {
+      const rowInTable = coord[0] + row;
+      const colInTable = coord[1] + col;
+      if(rowInTable >= this.size || colInTable >= this.size ||
+          !this.isFreeCell(rowInTable, colInTable)) {
+        retVal = false;
+        return ;
+      }
+    });
+    return retVal;
+  }
 
-/* Handler */
+  funcForTable(element, row, col, func) {
+    element.shapeToIndices().forEach(coord => {
+      const index = this.coordinateToIndex(coord[0] + row, coord[1] + col);
+      func(index);
+    });
+  }
 
-function delegate(parent, type, selector, handler) {
-  parent.addEventListener(type, function (event) {
-    const targetElement = event.target.closest(selector);
-    if (this.contains(targetElement)) {
-      handler.call(targetElement, event);
-    }
-  });
+  insertElement(element, row, col) {
+    this.funcForTable(element,row,col, (index) => {
+      const img = document.createElement('img');
+      img.src = element.typeToSrc();
+      this.tds[index].appendChild(img);
+    });
+  }
+
+  coordinateToIndex(i,j) {
+    return i * this.size + j;
+  }
 }
