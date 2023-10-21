@@ -31,18 +31,12 @@ class Table {
     });
   }
 
-  isFreeCell(i,j) {
-    const index = this.coordinateToIndex(i,j);
-    return !this.tds[index].firstChild;
-  }
-
   isAcceptableElement(element, row, col) {
     let retVal = true;
     element.shapeToIndices().forEach(coord => {
       const rowInTable = coord[0] + row;
       const colInTable = coord[1] + col;
-      if(rowInTable >= this.size || colInTable >= this.size ||
-          !this.isFreeCell(rowInTable, colInTable)) {
+      if(!this.isFreeCell(rowInTable, colInTable)) {
         retVal = false;
         return ;
       }
@@ -65,7 +59,19 @@ class Table {
     });
   }
 
-  coordinateToIndex(i,j) {
-    return i * this.size + j;
+  coordinateToIndex(row,col) {
+    return row * this.size + col;
+  }
+
+  isFreeCell(row,col) {
+    if(!this.isInTable(row,col)) {
+      return false;
+    }
+    const index = this.coordinateToIndex(row,col);
+    return !this.tds[index].firstChild;
+  }
+
+  isInTable(row,col) {
+    return row >= 0 && row < this.size && col >= 0 && col < this.size;
   }
 }
