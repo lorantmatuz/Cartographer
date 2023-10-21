@@ -13,18 +13,20 @@ function handleDragStart(e) {
 
 function handleDragEnter(e) {
   e.preventDefault();
-  const row = this.parentElement.rowIndex - dragRow;
-  const col = this.cellIndex - dragCol;
-  if(table.isAcceptableElement(elements.current,row,col)) {
-    table.funcForTable(elements.current, row , col, (index) => {
-      dragIndices.push(index);
-      table.tds[index].classList.add('over');
-    });
-  }
 }
 
 function handleDragOver(e) {
   e.preventDefault();
+  if(!dragIndices.length) {
+    const row = this.parentElement.rowIndex - dragRow;
+    const col = this.cellIndex - dragCol;
+    if(table.isAcceptableElement(elements.current,row,col)) {
+      table.funcForTable(elements.current, row , col, (index) => {
+        dragIndices.push(index);
+        table.tds[index].classList.add('over');
+      });
+    }
+  }
 }
 
 function handleDragLeave(e) {
