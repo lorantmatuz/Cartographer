@@ -1,151 +1,8 @@
-const elements = [
-  {
-      time: 2,
-      type: 'water',
-      shape: [[1,1,1],
-              [0,0,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'town',
-      shape: [[1,1,1],
-              [0,0,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 1,
-      type: 'forest',
-      shape: [[1,1,0],
-              [0,1,1],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'farm',
-      shape: [[1,1,1],
-              [0,0,1],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-      },
-  {
-      time: 2,
-      type: 'forest',
-      shape: [[1,1,1],
-              [0,0,1],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'town',
-      shape: [[1,1,1],
-              [0,1,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'farm',
-      shape: [[1,1,1],
-              [0,1,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 1,
-      type: 'town',
-      shape: [[1,1,0],
-              [1,0,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 1,
-      type: 'town',
-      shape: [[1,1,1],
-              [1,1,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 1,
-      type: 'farm',
-      shape: [[1,1,0],
-              [0,1,1],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 1,
-      type: 'farm',
-      shape: [[0,1,0],
-              [1,1,1],
-              [0,1,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'water',
-      shape: [[1,1,1],
-              [1,0,0],
-              [1,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'water',
-      shape: [[1,0,0],
-              [1,1,1],
-              [1,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'forest',
-      shape: [[1,1,0],
-              [0,1,1],
-              [0,0,1]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'forest',
-      shape: [[1,1,0],
-              [0,1,1],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-  {
-      time: 2,
-      type: 'water',
-      shape: [[1,1,0],
-              [1,1,0],
-              [0,0,0]],
-      rotation: 0,
-      mirrored: false
-  },
-]
+const elementTable = document.querySelector('#nextItemTable');
+const elementTableTds = document.querySelectorAll('#nextItemTable td');
 
-class Elements {
+
+class Element {
   constructor(time, type, shape) {
     this.time = time;
     this.type = type;
@@ -155,36 +12,101 @@ class Elements {
   }
 
   typeToSrc() {
-    return 'resources/fields/' + element.type + '.png';
+    return 'resources/fields/' + this.type + '.png';
   }
-}
 
-function typeToSrc(element) {
-  return 'resources/fields/' + element.type + '.png';
-}
+  shapeToIndexList() {
+    let res = [];
+    let ctr = 0;
+    this.shape.forEach(row => {
+      row.forEach((value) => {
+        if(value) {
+          res.push(ctr);
+        }
+        ++ctr;
+      })
+    });
+    return res;
+  }
 
-function shapeToIndexList(element) {
-  let res = [];
-  let ctr = 0;
-  element.shape.forEach(row => {
-    row.forEach((value) => {
-      if(value) {
-        res.push(ctr);
-      }
-      ++ctr;
-    })
-  });
-  return res;
-}
-
-function shapeToIndices(element) {
-  let res = [];
-  for(let i = 0; i < 3; ++i) {
-    for(let j = 0; j < 3; ++j) {
-      if(element.shape[i][j]) {
-        res.push([i,j]);
+  shapeToIndices() {
+    let res = [];
+    for(let i = 0; i < 3; ++i) {
+      for(let j = 0; j < 3; ++j) {
+        if(this.shape[i][j]) {
+          res.push([i,j]);
+        }
       }
     }
+    return res;
   }
-  return res;
-}
+
+  rotate() {
+    const result = [];
+    for (let i = 0; i < 3; i++) {
+      result.push([]);
+      for (let j = 0; j < 3; j++) {
+        result[i].push(this.shape[j][i]);
+      }
+    }
+    result.reverse();
+    this.shape = result;
+    this.rotation = ( this.rotate + 1 ) % 4;
+  }
+
+  mirror() {
+    const result = [];
+    for (let i = 0; i < 3; i++) {
+      result.push(this.shape[i].slice().reverse());
+    }
+    this.shape = result;
+    this.mirrored = !this.mirrored;
+  }
+
+  print() {
+    removeImages();
+    this.shapeToIndexList().forEach((index) => {
+      const image = document.createElement('img');
+      image.src = this.typeToSrc();
+      image.draggable = true;
+      elementTableTds[index].appendChild(image);
+    });
+  }
+
+};
+
+class Elements {
+  constructor() {
+    this.elements = [
+      new Element(2,'water',  [[1,1,1],[0,0,0],[0,0,0]]),
+      new Element(2,'town',   [[1,1,1],[0,0,0],[0,0,0]]),
+      new Element(1,'forest', [[1,1,0],[0,1,1],[0,0,0]]),
+      new Element(2,'farm',   [[1,1,1],[0,0,1],[0,0,0]]),
+      new Element(2,'forest', [[1,1,1],[0,0,1],[0,0,0]]),
+      new Element(2,'town',   [[1,1,1],[0,1,0],[0,0,0]]),
+      new Element(2,'farm',   [[1,1,1],[0,1,0],[0,0,0]]),
+      new Element(1,'town',   [[1,1,0],[1,0,0],[0,0,0]]),
+      new Element(1,'town',   [[1,1,1],[1,1,0],[0,0,0]]),
+      new Element(1,'farm',   [[1,1,0],[0,1,1],[0,0,0]]),
+      new Element(1,'farm',   [[0,1,0],[1,1,1],[0,1,0]]),
+      new Element(2,'water',  [[1,1,1],[1,0,0],[1,0,0]]),
+      new Element(2,'water',  [[1,0,0],[1,1,1],[1,0,0]]),
+      new Element(2,'forest', [[1,1,0],[0,1,1],[0,0,1]]),
+      new Element(2,'forest', [[1,1,0],[0,1,1],[0,0,0]]),
+      new Element(2,'water',  [[1,1,0],[1,1,0],[0,0,0]])
+    ];
+    this.current = null;
+    this.remainingIndices = Array.from({ length: this.elements.length }, (_, index) => index);
+  }
+
+  hasNext() {
+    return this.remainingIndices.length > 0;
+  }
+
+  next() {
+    const remainingIndex = Math.floor(Math.random() * this.remainingIndices.length);
+    const elementsIndex = this.remainingIndices[remainingIndex];
+    this.remainingIndices.splice(remainingIndex, 1);
+    return this.current = this.elements[elementsIndex];
+  }
+};
