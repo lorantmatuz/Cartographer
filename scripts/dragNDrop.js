@@ -1,85 +1,95 @@
+class DragAndDropHandler {
+  constructor(game) {
+    this.game = game;
+    this.elements = game.elements;
+    this.table = game.table;
+    this.elementTable = elementTable;
+    this.elementTableTds = elementTableTds;
+    this.dragRow = null;
+    this.dragCol = null;
+    this.dragIndices = [];
+  }
 
-
-let dragRow, dragCol;
-let dragIndices = [];
-
-function handleDragStart(e) {
-  dragRow = this.parentElement.rowIndex;
-  dragCol = this.cellIndex;
-  elements.current.shapeToIndexList().forEach((index) => {
-    elementTableTds[index].classList.add('dragging');
-  });
-}
-
-function handleDragEnter(e) {
-  e.preventDefault();
-}
-
-function handleDragOver(e) {
-  e.preventDefault();
-  if(!dragIndices.length) {
-    const row = this.parentElement.rowIndex - dragRow;
-    const col = this.cellIndex - dragCol;
-    if(table.isAcceptableElement(elements.current,row,col)) {
-      table.funcForTable(elements.current, row , col, (index) => {
-        dragIndices.push(index);
-        table.tds[index].classList.add('over');
+  handleDragStart(target,e) {
+    if(this.game.isRunning) {
+      this.dragRow = target.parentElement.rowIndex;
+      this.dragCol = target.cellIndex;
+      this.elements.current.shapeToIndexList().forEach((index) => {
+        this.elementTableTds[index].classList.add('dragging');
       });
     }
   }
-}
 
-function handleDragLeave(e) {
-  dragIndices.forEach((index) => {
-    table.tds[index].classList.remove('over');
-  });
-  dragIndices.length = 0;
-}
-
-function handleDrop(e) {
-  if (e.stopPropagation) {
-    e.stopPropagation();
+  handleDragEnter(target, e) {
+    e.preventDefault();
   }
-  if (dragIndices.length) {
-    // insertElement
-    dragIndices.forEach((index) => {
-      const img = document.createElement('img');
-      img.src = elements.current.typeToSrc();
-      table.tds[index].appendChild(img);
-      table.tds[index].classList.remove('dragging');
-      table.tds[index].classList.remove('over');
-    });
-    handleDragEnd();
-    if(elements.hasNext()) {
-      elements.next().print();
-    } else {
-      console.log('END OF GAME');
+
+  handleDragOver(target,e) {
+    e.preventDefault();
+    if (this.game.isRunning && !this.dragIndices.length) {
+      const row = target.parentElement.rowIndex - this.dragRow;
+      const col = target.cellIndex - this.dragCol;
+      if (this.table.isAcceptableElement(this.elements.current, row, col)) {
+        this.table.funcForTable(this.elements.current, row, col, (index) => {
+          this.dragIndices.push(index);
+          this.table.tds[index].classList.add('over-' + this.elements.current.type);
+        });
+      }
     }
   }
-  return false;
-}
 
-function handleDragEnd() {
-  for(let i = 0; i < 9; ++i) {
-    elementTableTds[i].classList.remove('dragging');
+  handleDragLeave(target,e) {
+    if(this.game.isRunning) {
+      this.dragIndices.forEach((index) => {
+        this.table.tds[index].classList.remove(('over-' + this.elements.current.type));
+      });
+      this.dragIndices.length = 0;
+    }
   }
-}
 
-
-function delegate(parent, type, selector, handler) {
-parent.addEventListener(type, function (event) {
-  const targetElement = event.target.closest(selector);
-  if (this.contains(targetElement)) {
-    handler.call(targetElement, event);
+  handleDrop(target,e) {
+    if (e.stopPropagation) {
+      e.stopPropagation();
+    }
+    if (this.game.isRunning && this.dragIndices.length) {
+      // insertElement
+      this.dragIndices.forEach((index) => {
+        const img = document.createElement('img');
+        img.src = this.elements.current.typeToSrc();
+        this.table.tds[index].appendChild(img);
+        this.table.tds[index].classList.remove('dragging');
+        this.table.tds[index].classList.remove(('over-' + this.elements.current.type));
+      });
+      this.handleDragEnd();
+      this.game.next();
+    }
+    return false;
   }
-});
-}
 
-function delegateAll() {
-  delegate(elementTable, 'dragstart', 'td', this.handleDragStart);
-  delegate(table.table, 'dragenter', 'td', this.handleDragEnter);
-  delegate(table.table, 'dragover', 'td', this.handleDragOver);
-  delegate(table.table, 'dragleave', 'td', this.handleDragLeave);
-  delegate(table.table, 'drop', 'td', this.handleDrop);
-  delegate(document, 'dragend', 'td', this.handleDragEnd);
+  handleDragEnd(target,e) {
+    if(this.game.isRunning) {
+      for (let i = 0; i < 9; ++i) {
+        this.elementTableTds[i].classList.remove('dragging');
+      }
+    }
+  }
+
+  delegate(parent, type, selector, handler) {
+    parent.addEventListener(type, (event) => {
+      const targetElement = event.target.closest(selector);
+      if (parent.contains(targetElement)) {
+        // slightly modified
+        handler.call(this, targetElement, event);
+      }
+    });
+  }
+
+  delegateAll() {
+    this.delegate(this.elementTable, 'dragstart', 'td', this.handleDragStart);
+    this.delegate(this.table.table, 'dragenter', 'td', this.handleDragEnter);
+    this.delegate(this.table.table, 'dragover', 'td', this.handleDragOver);
+    this.delegate(this.table.table, 'dragleave', 'td', this.handleDragLeave);
+    this.delegate(this.table.table, 'drop', 'td', this.handleDrop);
+    this.delegate(document, 'dragend', 'td', this.handleDragEnd);
+  }
 }
