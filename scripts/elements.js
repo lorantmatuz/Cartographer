@@ -64,13 +64,21 @@ class Element {
   }
 
   print() {
-    removeImages();
+    this.removeImages();
     this.shapeToIndexList().forEach((index) => {
       const image = document.createElement('img');
       image.src = this.typeToSrc();
       image.draggable = true;
       elementTableTds[index].appendChild(image);
     });
+  }
+
+  removeImages() {
+    for (let i = 0; i < 9; i++) {
+      while(elementTableTds[i].firstChild) {
+        elementTableTds[i].removeChild(elementTableTds[i].firstChild);
+      }
+    }
   }
 };
 
