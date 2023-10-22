@@ -30,9 +30,20 @@ td.dragging {
   opacity: 0.5;
 }
 
-td.over {
-  /*border: 2px dashed #000;*/
-  background-color: rgb(246, 208, 92);
+td.over-water {
+  background-color: rgba(90,210,236,.8);
+}
+
+td.over-town {
+  background-color: rgba(177,49,48,.8);
+}
+
+td.over-forest {
+  background-color: rgba(59,142,62,.8);
+}
+
+td.over-farm {
+  background-color: rgba(255,235,53,.8);
 }
 
 td img {
