@@ -3,11 +3,11 @@ class Table {
     this.size = 11;
     this.tds = [];
     this.table = null;
-    this.parent = document.querySelector('#mainTable'); 
   }
 
   createTable() {
     this.table = document.createElement('table');
+    let parent = document.querySelector('#mainTable');
     for (let i = 0; i < this.size; ++i) {
       let tr = document.createElement('tr');
       for (let j = 0; j < this.size; ++j) {
@@ -17,7 +17,7 @@ class Table {
       }
       this.table.appendChild(tr);
     }
-    this.parent.appendChild(this.table);
+    parent.appendChild(this.table);
     this.initTable();
   }
 
