@@ -72,7 +72,6 @@ class Element {
       elementTableTds[index].appendChild(image);
     });
   }
-
 };
 
 class Elements {
@@ -97,6 +96,7 @@ class Elements {
     ];
     this.current = null;
     this.remainingIndices = Array.from({ length: this.elements.length }, (_, index) => index);
+    this.buttonHandlers();
   }
 
   hasNext() {
@@ -108,5 +108,18 @@ class Elements {
     const elementsIndex = this.remainingIndices[remainingIndex];
     this.remainingIndices.splice(remainingIndex, 1);
     return this.current = this.elements[elementsIndex];
+  }
+
+  buttonHandlers() {
+    const rotate = document.querySelector('#rotateButton');
+    const mirror = document.querySelector('#mirrorButton');
+    rotate.addEventListener('click', () => {
+      this.current.rotate();
+      this.current.print();
+    });
+    mirror.addEventListener('click', () => {
+      this.current.mirror();
+      this.current.print();
+    });
   }
 };
