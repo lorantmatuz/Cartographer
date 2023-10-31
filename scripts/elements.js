@@ -103,8 +103,13 @@ class Elements {
       new Element(2,'water',  [[1,1,0],[1,1,0],[0,0,0]])
     ];
     this.current = null;
-    this.remainingIndices = Array.from({ length: this.elements.length }, (_, index) => index);
     this.buttonHandlers();
+    this.remainingIndices = [];
+    this.shuffle();
+  }
+
+  shuffle() {
+    this.remainingIndices = Array.from({ length: this.elements.length }, (_, index) => index);
   }
 
   hasNext() {
