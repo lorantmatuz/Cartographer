@@ -1,32 +1,49 @@
 class Game {
   constructor() {
-    this.duration = 28;
-    this.isRunning = true;
     this.table = new Table();
     this.table.createTable();
     this.elements = new Elements();
     const drag = new DragAndDropHandler(this);
     drag.delegateAll();
-    this.next();
+    this.seasons = new Seasons(this);
+    this.missions = new Missions(this);
+    this.elements.next();
+    this.elements.current.print();
   }
 
+  // one element is placed
+  // move on to the next one, check others
   next() {
-    if(this.running()) {
-      this.elements.next();
-      this.duration -= this.elements.current.time;
-      this.isRunning = this.isRunning && this.duration > 0;
-      console.log(this.duration, this.isRunning);
-      if(this.isRunning) {
-        this.elements.current.print();
-      }
+    if(this.isRunning()) {
+      // duration of placed element
+      const duration = this.elements.current.time;
+      console.log('Duration of element:', duration);
+      this.seasons.current.timeDecrease(duration);
+      // if the season is not ended yet
+      if(this.seasons.current.isNotOver()) {
+        console.log('Season continues');
+      } 
+      // if the season is already ended
       else {
-        this.gameOver();
+        console.log('Season ended');
+        // TODO: count points
+        const points = this.missions.countPoints();
+        this.seasons.current.addPoint(points);
+        // next season or end
+        if(this.seasons.isNotOver()) {
+          this.seasons.next();
+        } else {
+          this.gameOver();
+        }
       }
+      // new element
+      this.elements.next();
+      this.elements.current.print();
     }
   }
 
-  running() {
-    return this.isRunning && this.elements.hasNext();
+  isRunning() {
+    return this.seasons.hasNext();
   }
 
   gameOver() {
