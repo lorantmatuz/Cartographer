@@ -1,6 +1,7 @@
 class Table {
   constructor() {
     this.size = 11;
+    this.types = [];
     this.tds = [];
     this.table = null;
   }
@@ -9,13 +10,16 @@ class Table {
     this.table = document.createElement('table');
     let parent = document.querySelector('#mainTable');
     for (let i = 0; i < this.size; ++i) {
+      let type = [];
       let tr = document.createElement('tr');
       for (let j = 0; j < this.size; ++j) {
+        type.push(null);
         let td = document.createElement('td');
         this.tds.push(td);
         tr.appendChild(td);
       }
       this.table.appendChild(tr);
+      this.types.push(type);
     }
     parent.appendChild(this.table);
     this.initTable();
@@ -28,6 +32,7 @@ class Table {
       let img = document.createElement('img');
       img.src = 'resources/fields/mountain.png';
       this.tds[index].appendChild(img);
+      this.types[coord[0] - 1][coord[1] - 1] = 'mountain';
     });
   }
 
@@ -51,11 +56,13 @@ class Table {
     });
   }
 
-  insertElement(element, row, col) {
-    this.funcForTable(element,row,col, (index) => {
+  insertElement(element, indices) {
+    indices.forEach(index => {
       const img = document.createElement('img');
       img.src = element.typeToSrc();
       this.tds[index].appendChild(img);
+      const coord = this.indexToCoordinate(index);
+      this.types[coord[0]][coord[1]] = element.type;
     });
   }
 
@@ -63,15 +70,30 @@ class Table {
     return row * this.size + col;
   }
 
+  indexToCoordinate(index) {
+    const col = index % this.size;
+    const row = (index - col) / this.size;
+    return [row, col];
+  }
+
   isFreeCell(row,col) {
     if(!this.isInTable(row,col)) {
       return false;
     }
-    const index = this.coordinateToIndex(row,col);
-    return !this.tds[index].firstChild;
+    return !this.types[row][col];
   }
 
   isInTable(row,col) {
     return row >= 0 && row < this.size && col >= 0 && col < this.size;
+  }
+
+  funcForIncidentCells(row, col, func) {
+    const directions = [[-1,0],[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1]];
+    for(const direction of directions) {
+      const cell = [row + direction[0], col + direction[1]];
+      if(this.isInTable(cell[0],cell[1])) {
+        func(cell[0], cell[1]);
+      }
+    }
   }
 }
