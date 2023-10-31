@@ -53,3 +53,96 @@ const missions =
     }
   ],
 }
+
+class Mission {
+  constructor(title, description, table) {
+    this.title = title;
+    this.description = description;
+    this.table = table;
+    this.types = this.table.types;
+    this.size = this.table.size;
+  }
+
+  edgeOfForestPoints() {
+    let points = 0;
+    const check = (row, col) => {
+      console.log(row,col);
+      if(this.types[row][col] === 'forest') {
+        ++points;
+      }
+    };
+    for(let i = 0; i < this.size; ++i) {
+      check(0,i);
+      check(this.size-1,i);
+    }
+    for(let i = 1; i < this.size-1; i ++) {
+      check(i,0);
+      check(i,this.size-1);
+    }
+    return points;
+  }
+
+  sleepyValleyPoints() {
+    let points = 0;
+    for(let row = 0; row < this.size; ++row) {
+      let ctr = 0;
+      for(let col = 0; col < this.size; ++col) {
+        if(this.types[row][col] == 'forest') {
+          ++ctr;
+        }
+      }
+      if(ctr == 3) {
+        ++points;
+      }
+    }
+    return points * 4;
+  }
+
+  three() {
+    let points = 0;
+    const check = (row, col) => {
+      if(this.types[row][col] === 'farm') {
+        ++points;
+      }
+    };
+    for(let row = 0; row < this.size; ++row) {
+      for(let col = 0; col < this.size; ++col) {
+        if(this.types[row][col] == 'water') {
+          this.table.funcForIncidentCells(row,col,check);
+        }
+      }
+    }
+    return points * 2;
+  }
+
+  four() {
+    let points = 0;
+    for(let i = 0; i < this.size; ++i) {
+      let rowCtr = 0;
+      let colCtr = 0;
+      for(let j = 0; j < this.size; ++j) {
+        if(this.types[i][j]) {
+          ++rowCtr;
+        }
+        if(this.types[j][i]) {
+          ++colCtr;
+        }
+      }
+      if(rowCtr == this.size || colCtr == this.size) {
+        ++points;
+      }
+    }
+    return points * 6;
+  }
+}
+
+class Missions {
+  current = [];
+  constructor(game) {
+    this.game = game;
+  }
+
+  countPoints() {
+    return 1;
+  }
+}
