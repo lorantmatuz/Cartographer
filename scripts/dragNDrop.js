@@ -52,14 +52,7 @@ class DragAndDropHandler {
       e.stopPropagation();
     }
     if (this.game.isRunning && this.dragIndices.length) {
-      // insertElement
-      this.dragIndices.forEach((index) => {
-        const img = document.createElement('img');
-        img.src = this.elements.current.typeToSrc();
-        this.table.tds[index].appendChild(img);
-        this.table.tds[index].classList.remove('dragging');
-        this.table.tds[index].classList.remove(('over-' + this.elements.current.type));
-      });
+      this.table.insertElement(this.elements.current, this.dragIndices);
       this.handleDragEnd();
       this.game.next();
     }
