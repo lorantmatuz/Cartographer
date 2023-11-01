@@ -1,21 +1,31 @@
-const elementTable = document.querySelector('#nextItemTable');
 const elementTableTds = document.querySelectorAll('#nextItemTable td');
 const elementTableSpan = document.querySelector('#timeOfNextItem span');
 
-
+/**
+ * This class provides an implementation of an element to be placed.
+ */
 class Element {
+  /**
+   * Constructor.
+   */
   constructor(time, type, shape) {
     this.time = time;
     this.type = type;
     this.shape = shape;
-    this.rotation = 0;
-    this.mirrored = false;
   }
 
+  /**
+   * Prints the source of the image of this element.
+   * @returns {string} The source of the image
+   */
   typeToSrc() {
     return 'resources/fields/' + this.type + '.png';
   }
 
+  /**
+   * Creates a 0..8 list that describes shape.
+   * @returns {*[]} A list of indices
+   */
   shapeToIndexList() {
     let res = [];
     let ctr = 0;
@@ -30,6 +40,10 @@ class Element {
     return res;
   }
 
+  /**
+   * Creates a list of coordinates of the shape.
+   * @returns {*[]} A list of the coordinates of the indices.
+   */
   shapeToIndices() {
     let res = [];
     for(let i = 0; i < 3; ++i) {
@@ -42,6 +56,9 @@ class Element {
     return res;
   }
 
+  /**
+   * Rotates the shape of the element.
+   */
   rotate() {
     const result = [];
     for (let i = 0; i < 3; i++) {
@@ -52,18 +69,22 @@ class Element {
     }
     result.reverse();
     this.shape = result;
-    this.rotation = ( this.rotate + 1 ) % 4;
   }
 
+  /**
+   * Mirrors the shape of the element.
+   */
   mirror() {
     const result = [];
     for (let i = 0; i < 3; i++) {
       result.push(this.shape[i].slice().reverse());
     }
     this.shape = result;
-    this.mirrored = !this.mirrored;
   }
 
+  /**
+   * Prints the element to the 3x3 table.
+   */
   print() {
     this.removeImages();
     elementTableSpan.innerHTML = this.time;
@@ -75,6 +96,9 @@ class Element {
     });
   }
 
+  /**
+   * Removes the images from the 3x3 table.
+   */
   removeImages() {
     for (let i = 0; i < 9; i++) {
       while(elementTableTds[i].firstChild) {
@@ -84,7 +108,16 @@ class Element {
   }
 }
 
+/**
+ * This class provides an implementation of the elements.
+ */
 class Elements {
+  current = null;
+  remainingIndices = [];
+
+  /**
+   * Constructor.
+   */
   constructor() {
     this.elements = [
       new Element(2,'water',  [[1,1,1],[0,0,0],[0,0,0]]),
@@ -104,20 +137,21 @@ class Elements {
       new Element(2,'forest', [[1,1,0],[0,1,1],[0,0,0]]),
       new Element(2,'water',  [[1,1,0],[1,1,0],[0,0,0]])
     ];
-    this.current = null;
     this.buttonHandlers();
-    this.remainingIndices = [];
     this.shuffle();
   }
 
+  /**
+   * Shuffles the indices for the iteration on the elements.
+   */
   shuffle() {
     this.remainingIndices = Array.from({ length: this.elements.length }, (_, index) => index);
   }
 
-  hasNext() {
-    return this.remainingIndices.length > 0;
-  }
-
+  /**
+   * Determines a random element from the elements.
+   * @returns {*} A random element.
+   */
   next() {
     const remainingIndex = Math.floor(Math.random() * this.remainingIndices.length);
     const elementsIndex = this.remainingIndices[remainingIndex];
@@ -125,6 +159,9 @@ class Elements {
     return this.current = this.elements[elementsIndex];
   }
 
+  /**
+   * Handles the rotate and mirror buttons.
+   */
   buttonHandlers() {
     const rotate = document.querySelector('#rotateButton');
     const mirror = document.querySelector('#mirrorButton');
