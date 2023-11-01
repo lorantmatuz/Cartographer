@@ -12,46 +12,53 @@ body {
   text-align: center;
 }
 
-table {
+/* Main table style */
+
+#mainTable {
+  text-align: center;
+  display: inline-block;
   padding: 10px;
   border-radius: 7px;
   background-color: white;
 }
 
-td {
-  width: 50px;
-  height: 50px;
+#mainTable td {
+  width: 60px;
+  height: 60px;
   padding: 0;
   border-radius: 7px;
   background-color: rgb(249, 230, 159);
+}
+
+#mainTable td img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: inherit;
+  display: block;
 }
 
 td.dragging {
   opacity: 0.5;
 }
 
-td.over-water {
+#mainTable td.over-water {
   background-color: rgba(90,210,236,.8);
 }
 
-td.over-town {
+#mainTable td.over-town {
   background-color: rgba(177,49,48,.8);
 }
 
-td.over-forest {
+#mainTable td.over-forest {
   background-color: rgba(59,142,62,.8);
 }
 
-td.over-farm {
+#mainTable td.over-farm {
   background-color: rgba(255,235,53,.8);
 }
 
-td img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: inherit;
-  display: block;
-}
+
+/* Season boxes */
 
 #seasons {
   text-align: center;
@@ -93,16 +100,59 @@ td img {
 
 #totalPoint {
   text-align: center;
-  display: inline-block;
+  font-weight: bold;
 }
 
 h2 {
   text-align: left;
 }
 
-#nextItemTable td {
- background-color: inherit;
+/* Mission table */
+
+#missions {
+  padding: 0px;
+  border-radius: 7px;
+  background-color: transparent;
 }
+
+#missions td {
+  width: auto;
+  height: auto;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+#missions td img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: inherit;
+  display: block;
+}
+
+/* Next item table */
+
+#nextItemTable {
+  padding: 10px;
+  border-radius: 7px;
+  background-color: white;
+}
+
+#nextItemTable td {
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border-radius: 7px;
+  background-color: inherit;
+}
+
+#nextItemTable td img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: inherit;
+  display: block;
+}
+
+/* Button */
 
 button {
   width: 100px;

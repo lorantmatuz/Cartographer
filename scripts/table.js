@@ -8,7 +8,8 @@ class Table {
 
   createTable() {
     this.table = document.createElement('table');
-    let parent = document.querySelector('#mainTable');
+    this.table.id = 'mainTable';
+    let parent = document.querySelector('#mainTableDiv');
     for (let i = 0; i < this.size; ++i) {
       let type = [];
       let tr = document.createElement('tr');
@@ -88,7 +89,7 @@ class Table {
   }
 
   funcForIncidentCells(row, col, func) {
-    const directions = [[-1,0],[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1]];
+    const directions = [[-1,0],[0,-1],[1,0],[0,1]];
     for(const direction of directions) {
       const cell = [row + direction[0], col + direction[1]];
       if(this.isInTable(cell[0],cell[1])) {
