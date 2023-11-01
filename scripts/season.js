@@ -16,6 +16,7 @@ class Season {
   constructor(seasons) {
     this.seasons = seasons;
     this.seasonName = seasons.seasonList[seasons.index];
+    this.seasonNameHu = seasons.seasonListHu[seasons.index];
     this.pointInSeasonSpan = document.querySelector('#' + this.seasonName + ' span');
     this.init();
   }
@@ -25,7 +26,7 @@ class Season {
    * Adds filled colored points to the current missions.
    */
   init() {
-    this.currentSeasonSpan.innerHTML = this.seasonName;
+    this.currentSeasonSpan.innerHTML = this.seasonNameHu;
     this.timeDecrease(0);
     this.addPoint(0);
     for (let i = 0; i < this.seasons.seasonList.length; i++) {
@@ -70,6 +71,7 @@ class Season {
  */
 class Seasons {
   seasonList = ["Spring", "Summer", "Fall", "Winter"];
+  seasonListHu = ["Tavasz", "Nyár", "Ősz", "Tél"];
   current = null;
   indices = [];
   totalPoint = 0;

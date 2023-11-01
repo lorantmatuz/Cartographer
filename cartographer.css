@@ -1,3 +1,14 @@
+:root {
+  --spring: #69be6b;
+  --springDark: #3b8e3e;
+  --summerDark: #debb0b;
+  --summer: #fee874;
+  --fall: #eabd93;
+  --fallDark: #6c3f13;
+  --winter: #5ad2ec;
+  --winterDark: #3090a5;
+}
+
 body {
   background-image: url('resources/background.png');
   background-repeat: no-repeat;
@@ -23,8 +34,8 @@ body {
 }
 
 #mainTable td {
-  width: 60px;
-  height: 60px;
+  width: 65px;
+  height: 65px;
   padding: 0;
   border-radius: 7px;
   background-color: rgb(249, 230, 159);
@@ -66,11 +77,13 @@ td.dragging {
 }
 
 .season {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   float: left;
-  color: white;
-  border-radius: 7px;
+  color: black;
+  font-size: larger;
+  font-weight: bold;
+  border-radius: 15px;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -83,23 +96,23 @@ td.dragging {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  border: 1px solid black;
+  border: 2px solid black;
 }
 
 .filled-Spring {
-  background-color: #69be6b;
+  background-color: var(--springDark);
 }
 
 .filled-Summer {
-  background-color: #fee874;
+  background-color: var(--summerDark);
 }
 
 .filled-Fall {
-  background-color: #eabd93;
+  background-color: var(--fallDark);
 }
 
 .filled-Winter {
-  background-color: #5ad2ec;
+  background-color: var(--winterDark);
 }
 
 .empty {
@@ -107,28 +120,29 @@ td.dragging {
 }
 
 #Spring {
-  background-color: #69be6b;
-  border: 4px solid #3b8e3e;
+  background-color: var(--spring);
+  border: 4px solid var(--springDark);
 }
 
 #Summer {
-  background-color: #fee874;
-  border: 4px solid #debb0b;
+  background-color: var(--summer);
+  border: 4px solid var(--summerDark)
 }
 
 #Fall {
-  background-color: #eabd93;
-  border: 4px solid #6c3f13;
+  background-color: var(--fall);
+  border: 4px solid var(--fallDark)
 }
 
 #Winter {
-  background-color: #5ad2ec;
-  border: 4px solid #3090a5;
+  background-color: var(--winter);
+  border: 4px solid var(--winterDark);
 }
 
 #totalPoint {
   text-align: center;
   font-weight: bold;
+  font-size: large;
 }
 
 h2 {
