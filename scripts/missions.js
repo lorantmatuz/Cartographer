@@ -1,4 +1,8 @@
-const missions = 
+/**
+ * The missions object, extended with image resources, and functions.
+ */
+
+const missions =
 {
   "basic": [
     {
@@ -133,13 +137,24 @@ const missions =
   ],
 }
 
+/**
+ * This class provides an implementation of missions.
+ */
 class Missions {
   missions = [];
+
+  /**
+   * Constructor.
+   * @param game The initialized game object.
+   */
   constructor(game) {
     this.game = game;
     this.init();
   }
 
+  /**
+   * Initializes by selecting four missions, and prints them to screen.
+   */
   init() {
     let missionTds = document.querySelectorAll('#currentSeason table td');
     for(let i = 0; i < 4; ++i) {
@@ -151,6 +166,10 @@ class Missions {
     }
   }
 
+  /**
+   * Determines the points regarding the enclosed mountains.
+   * @returns {number} The points of the mountains
+   */
   enclosedMountains() {
     const table = this.game.table;
     let points = 0;
@@ -168,6 +187,10 @@ class Missions {
     return points;
   }
 
+  /**
+   * Counts the points of the specific missions.
+   * @returns {*} the total points in a season.
+   */
   countPoints() {
     return this.missions[this.game.seasons.indices[0]].function(this.game)
         + this.missions[this.game.seasons.indices[1]].function(this.game) +
