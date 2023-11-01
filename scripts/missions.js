@@ -3,19 +3,98 @@ const missions =
   "basic": [
     {
       "title": "Az erdő széle",
-      "description": "A térképed szélével szomszédos erdőmezőidért egy-egy pontot kapsz."
+      "description": "A térképed szélével szomszédos erdőmezőidért egy-egy pontot kapsz.",
+      "function": game => {
+        const types = game.table.types;
+        const size = game.table.size;
+        let points = 0;
+        const check = (row, col) => {
+          if(types[row][col] === 'forest') {
+            ++points;
+          }
+        };
+        for(let i = 0; i < size; ++i) {
+          check(0,i);
+          check(size-1,i);
+        }
+        for(let i = 1; i < size-1; i ++) {
+          check(i,0);
+          check(i,size-1);
+        }
+        return points;
+      },
+      "image": "resources/missions/0.png"
     },
     {
       "title": "Álmos-völgy",
-      "description": "Minden olyan sorért, amelyben három erdőmező van, négy-négy pontot kapsz."
+      "description": "Minden olyan sorért, amelyben három erdőmező van, négy-négy pontot kapsz.",
+      "function": game => {
+        const types = game.table.types;
+        const size = game.table.size;
+        let points = 0;
+        for(let row = 0; row < size; ++row) {
+          let ctr = 0;
+          for(let col = 0; col < size; ++col) {
+            if(types[row][col] == 'forest') {
+              ++ctr;
+            }
+          }
+          if(ctr == 3) {
+            ++points;
+          }
+        }
+        return points * 4;
+      },
+      "image": "resources/missions/1.png"
     },
     {
       "title": "Krumpliöntözés",
-      "description": "A farmmezőiddel szomszédos vízmezőidért két-két pontot kapsz."
+      "description": "A farmmezőiddel szomszédos vízmezőidért két-két pontot kapsz.",
+      "function": game => {
+        const types = game.table.types;
+        const size = game.table.size;
+        let points = 0;
+        const check = (row, col) => {
+          if(types[row][col] === 'farm') {
+            ++points;
+          }
+        };
+        for(let row = 0; row < size; ++row) {
+          for(let col = 0; col < size; ++col) {
+            if(types[row][col] == 'water') {
+              game.table.funcForIncidentCells(row,col,check);
+            }
+          }
+        }
+        return points * 2;
+      },
+      "image": "resources/missions/2.png"
     },
     {
       "title": "Határvidék",
-      "description": "Minden teli sorért vagy oszlopért 6-6 pontot kapsz."
+      "description": "Minden teli sorért vagy oszlopért 6-6 pontot kapsz.",
+      "function": game => {
+        const size = game.table.size;
+        const types = game.table.types;
+        let points = 0;
+        for(let i = 0; i < size; ++i) {
+          let rowCtr = 0;
+          let colCtr = 0;
+          for(let j = 0; j < size; ++j) {
+            if(types[i][j]) {
+              ++rowCtr;
+            }
+            if(types[j][i]) {
+              ++colCtr;
+            }
+          }
+          if(rowCtr == size || colCtr == size) {
+            ++points;
+          }
+        }
+        return points * 6;
+      },
+      "image": "resources/missions/3.png"
     }
   ],
   "extra": [
@@ -54,95 +133,28 @@ const missions =
   ],
 }
 
-class Mission {
-  constructor(title, description, table) {
-    this.title = title;
-    this.description = description;
-    this.table = table;
-    this.types = this.table.types;
-    this.size = this.table.size;
-  }
-
-  edgeOfForestPoints() {
-    let points = 0;
-    const check = (row, col) => {
-      console.log(row,col);
-      if(this.types[row][col] === 'forest') {
-        ++points;
-      }
-    };
-    for(let i = 0; i < this.size; ++i) {
-      check(0,i);
-      check(this.size-1,i);
-    }
-    for(let i = 1; i < this.size-1; i ++) {
-      check(i,0);
-      check(i,this.size-1);
-    }
-    return points;
-  }
-
-  sleepyValleyPoints() {
-    let points = 0;
-    for(let row = 0; row < this.size; ++row) {
-      let ctr = 0;
-      for(let col = 0; col < this.size; ++col) {
-        if(this.types[row][col] == 'forest') {
-          ++ctr;
-        }
-      }
-      if(ctr == 3) {
-        ++points;
-      }
-    }
-    return points * 4;
-  }
-
-  three() {
-    let points = 0;
-    const check = (row, col) => {
-      if(this.types[row][col] === 'farm') {
-        ++points;
-      }
-    };
-    for(let row = 0; row < this.size; ++row) {
-      for(let col = 0; col < this.size; ++col) {
-        if(this.types[row][col] == 'water') {
-          this.table.funcForIncidentCells(row,col,check);
-        }
-      }
-    }
-    return points * 2;
-  }
-
-  four() {
-    let points = 0;
-    for(let i = 0; i < this.size; ++i) {
-      let rowCtr = 0;
-      let colCtr = 0;
-      for(let j = 0; j < this.size; ++j) {
-        if(this.types[i][j]) {
-          ++rowCtr;
-        }
-        if(this.types[j][i]) {
-          ++colCtr;
-        }
-      }
-      if(rowCtr == this.size || colCtr == this.size) {
-        ++points;
-      }
-    }
-    return points * 6;
-  }
-}
-
 class Missions {
-  current = [];
+  missions = [];
   constructor(game) {
     this.game = game;
+    this.init();
+  }
+
+  init() {
+    let missionTds = document.querySelectorAll('#currentSeason table td');
+    for(let i = 0; i < 4; ++i) {
+      this.missions.push(missions['basic'][i]);
+      this.missions[0].function(this.game);
+      const img = new Image();
+      img.src = this.missions[i].image;
+      missionTds[i].appendChild(img);
+    }
   }
 
   countPoints() {
-    return 1;
+    const seasonIndex = this.game.seasons.index - 1;
+    let indices = [seasonIndex, (seasonIndex + 1) % this.game.seasons.seasons.length];
+    return this.missions[indices[0]].function(this.game) + this.missions[indices[1]].function(this.game);
   }
+
 }
