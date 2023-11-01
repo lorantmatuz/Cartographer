@@ -49,7 +49,7 @@ class DragAndDropHandler {
    */
   handleDragOver(target,e) {
     e.preventDefault();
-    if (this.game.isRunning() && !this.dragIndices.length) {
+    if (this.game.isRunning() && !this.dragIndices.length && this.dragRow !== null) {
       const row = target.parentElement.rowIndex - this.dragRow;
       const col = target.cellIndex - this.dragCol;
       if (this.table.isAcceptableElement(this.elements.current, row, col)) {
@@ -89,6 +89,7 @@ class DragAndDropHandler {
       this.table.insertElement(this.elements.current, this.dragIndices);
       this.handleDragEnd();
       this.game.next();
+      this.dragIndices.length = 0;
     }
   }
 
@@ -102,6 +103,7 @@ class DragAndDropHandler {
         this.elementTableTds[i].classList.remove('dragging');
       }
     }
+    this.dragRow = null;
   }
 
   /**
