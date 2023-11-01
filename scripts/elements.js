@@ -1,5 +1,6 @@
 const elementTable = document.querySelector('#nextItemTable');
 const elementTableTds = document.querySelectorAll('#nextItemTable td');
+const elementTableSpan = document.querySelector('#timeOfNextItem span');
 
 
 class Element {
@@ -65,6 +66,7 @@ class Element {
 
   print() {
     this.removeImages();
+    elementTableSpan.innerHTML = this.time;
     this.shapeToIndexList().forEach((index) => {
       const image = document.createElement('img');
       image.src = this.typeToSrc();
