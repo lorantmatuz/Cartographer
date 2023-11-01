@@ -152,9 +152,8 @@ class Missions {
   }
 
   countPoints() {
-    const seasonIndex = this.game.seasons.index - 1;
-    let indices = [seasonIndex, (seasonIndex + 1) % this.game.seasons.seasons.length];
-    return this.missions[indices[0]].function(this.game) + this.missions[indices[1]].function(this.game);
+    return this.missions[this.game.seasons.indices[0]].function(this.game)
+        + this.missions[this.game.seasons.indices[1]].function(this.game);
   }
 
 }
