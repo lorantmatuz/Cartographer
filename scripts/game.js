@@ -1,4 +1,12 @@
+/**
+ * This class provides an implementation of the game object.
+ * This is the driver class of the game.
+ */
 class Game {
+
+  /**
+   * Constructor.
+   */
   constructor() {
     this.table = new Table();
     this.table.createTable();
@@ -10,41 +18,41 @@ class Game {
     this.elements.current.print();
   }
 
-  // one element is placed
-  // move on to the next one, check others
+  /**
+   * Places the current element, reduces the time in the season.
+   * Then, counts the points if the seasons is ended, and moves
+   * on to the next season or alert by game over.
+   * Finally, moves on to the next element, and prints it.
+   */
   next() {
     if(this.isRunning()) {
-      // duration of placed element
-      const duration = this.elements.current.time;
-      //console.log('Duration of element:', duration);
-      this.seasons.current.timeDecrease(duration);
-      // if the season is not ended yet
-      if(this.seasons.current.isNotOver()) {
-        //console.log('Season continues');
-      } 
-      // if the season is already ended
-      else {
-        //console.log('Season ended');
-        // TODO: count points
+      const time = this.elements.current.time;
+      this.seasons.current.timeDecrease(time);
+      if(!this.seasons.current.isNotOver()) {
         const points = this.missions.countPoints();
         this.seasons.current.addPoint(points);
-        // next season or end
         if(this.seasons.isNotOver()) {
           this.seasons.next();
         } else {
           this.gameOver();
         }
       }
-      // new element
       this.elements.next();
       this.elements.current.print();
     }
   }
 
+  /**
+   * Checks if the game is still running.
+   * @returns {boolean|*} true if the game is still running
+   */
   isRunning() {
     return this.seasons.isNotOver();
   }
 
+  /**
+   * Alerts by game over if the game is over.
+   */
   gameOver() {
     setTimeout(() => { alert('Game over'); }, 0);
   }
