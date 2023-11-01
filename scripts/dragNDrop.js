@@ -10,7 +10,6 @@ class DragAndDropHandler {
     this.game = game;
     this.elements = game.elements;
     this.table = game.table;
-    this.elementTable = elementTable;
     this.elementTableTds = elementTableTds;
     this.dragRow = null;
     this.dragCol = null;
@@ -126,7 +125,8 @@ class DragAndDropHandler {
    * Delegates all above functions after initializing the game object.
    */
   delegateAll() {
-    this.delegate(this.elementTable, 'dragstart', 'td', this.handleDragStart);
+    const elementTable = document.querySelector('#nextItemTable');
+    this.delegate(elementTable, 'dragstart', 'td', this.handleDragStart);
     this.delegate(this.table.table, 'dragenter', 'td', this.handleDragEnter);
     this.delegate(this.table.table, 'dragover', 'td', this.handleDragOver);
     this.delegate(this.table.table, 'dragleave', 'td', this.handleDragLeave);
