@@ -138,7 +138,7 @@ h2 {
 /* Mission table */
 
 #missions {
-  padding: 0px;
+  padding: 0;
   border-radius: 7px;
   background-color: transparent;
 }

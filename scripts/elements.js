@@ -82,7 +82,7 @@ class Element {
       }
     }
   }
-};
+}
 
 class Elements {
   constructor() {
@@ -137,4 +137,4 @@ class Elements {
       this.current.print();
     });
   }
-};
+}
