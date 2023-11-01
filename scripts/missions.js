@@ -35,11 +35,11 @@ const missions =
         for(let row = 0; row < size; ++row) {
           let ctr = 0;
           for(let col = 0; col < size; ++col) {
-            if(types[row][col] == 'forest') {
+            if(types[row][col] === 'forest') {
               ++ctr;
             }
           }
-          if(ctr == 3) {
+          if(ctr === 3) {
             ++points;
           }
         }
@@ -61,7 +61,7 @@ const missions =
         };
         for(let row = 0; row < size; ++row) {
           for(let col = 0; col < size; ++col) {
-            if(types[row][col] == 'water') {
+            if(types[row][col] === 'water') {
               game.table.funcForIncidentCells(row,col,check);
             }
           }
@@ -88,7 +88,7 @@ const missions =
               ++colCtr;
             }
           }
-          if(rowCtr == size || colCtr == size) {
+          if(rowCtr === size || colCtr === size) {
             ++points;
           }
         }
@@ -151,9 +151,27 @@ class Missions {
     }
   }
 
+  enclosedMountains() {
+    const table = this.game.table;
+    let points = 0;
+    table.mountainCells.forEach(coord => {
+      let ctr = 0;
+      table.funcForIncidentCells(coord[0], coord[1], (i,j) => {
+        if(table.types[i][j]) {
+          ++ctr;
+        }
+      });
+      if(ctr === table.directions.length) {
+        ++points;
+      }
+    });
+    return points;
+  }
+
   countPoints() {
     return this.missions[this.game.seasons.indices[0]].function(this.game)
-        + this.missions[this.game.seasons.indices[1]].function(this.game);
+        + this.missions[this.game.seasons.indices[1]].function(this.game) +
+        this.enclosedMountains();
   }
 
 }

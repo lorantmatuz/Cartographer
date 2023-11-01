@@ -1,4 +1,6 @@
 class Table {
+  mountainCells = [[1,1], [3,8], [5,3], [8,9], [9,5]];
+  directions = [[-1,0],[0,-1],[1,0],[0,1]];
   constructor() {
     this.size = 11;
     this.types = [];
@@ -27,13 +29,12 @@ class Table {
   }
 
   initTable() {
-    [[2,2], [4,9], [6,4], [9,10], [10,6]]
-    .forEach(coord => {
-      let index = this.coordinateToIndex(coord[0] - 1,coord[1] - 1);
+    this.mountainCells.forEach(coord => {
+      let index = this.coordinateToIndex(coord[0],coord[1]);
       let img = document.createElement('img');
       img.src = 'resources/fields/mountain.png';
       this.tds[index].appendChild(img);
-      this.types[coord[0] - 1][coord[1] - 1] = 'mountain';
+      this.types[coord[0]][coord[1]] = 'mountain';
     });
   }
 
@@ -44,7 +45,6 @@ class Table {
       const colInTable = coord[1] + col;
       if(!this.isFreeCell(rowInTable, colInTable)) {
         retVal = false;
-        return ;
       }
     });
     return retVal;
@@ -89,8 +89,7 @@ class Table {
   }
 
   funcForIncidentCells(row, col, func) {
-    const directions = [[-1,0],[0,-1],[1,0],[0,1]];
-    for(const direction of directions) {
+    for(const direction of this.directions) {
       const cell = [row + direction[0], col + direction[1]];
       if(this.isInTable(cell[0],cell[1])) {
         func(cell[0], cell[1]);
