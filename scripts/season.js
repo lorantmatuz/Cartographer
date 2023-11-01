@@ -1,10 +1,12 @@
 class Season {
-  constructor(season) {
+  totalPointSpan = document.querySelector('#totalPoint span');
+  timeInSeasonSpan = document.querySelector('#timeInSeason span');
+  currentSeasonSpan = document.querySelector('#currentSeason span');
+  constructor(season, points) {
     this.season = season;
     this.duration = 7;
-    this.timeInSeasonSpan = document.querySelector('#timeInSeason span');
+    this.totalPoint = points;
     this.pointInSeasonSpan = document.querySelector('#' + this.season + ' span');
-    this.currentSeasonSpan = document.querySelector('#currentSeason span');
     this.init();
   }
 
@@ -15,7 +17,10 @@ class Season {
   }
 
   addPoint(point) {
+    this.totalPoint += point;
     this.pointInSeasonSpan.innerHTML = point;
+    this.totalPointSpan.innerHTML = this.totalPoint;
+    console.log(this.totalPoint);
   }
 
   // todo
@@ -32,6 +37,7 @@ class Season {
 class Seasons {
   seasons = ["Spring", "Summer", "Fall", "Winter"];
   current = null;
+  totalPoint = 0;
   constructor(game) {
     this.game = game;
     this.index = 0;
@@ -43,8 +49,10 @@ class Seasons {
   }
 
   next() {
-    this.game.elements.shuffle();
-    this.current = new Season(this.seasons[this.index++]);
-    console.log(this.current);
+    if(this.current) {
+      this.game.elements.shuffle();
+      this.totalPoint = this.current.totalPoint;
+    }
+    this.current = new Season(this.seasons[this.index++], this.totalPoint);
   }
 }
